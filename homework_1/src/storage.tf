@@ -1,19 +1,20 @@
-# Создание бакета
+# Создание бакета в Object Storage
 resource "yandex_storage_bucket" "student_bucket" {
-  bucket = "sergeikoost-${formatdate("YYYY-MM-DD", timestamp())}"
+  bucket     = "kusk111serj-${formatdate("YYYY-MM-DD", timestamp())}"
+  folder_id  = var.yc_folder_id
 
   anonymous_access_flags {
     read = true
     list = false
   }
+
+  acl = "public-read"
 }
 
-# Загрузка картинки
+# Загрузка картинки в бакет
 resource "yandex_storage_object" "web_image" {
   bucket = yandex_storage_bucket.student_bucket.bucket
-  key    = "web-image.jpg"
-  source = "web-image.jpg"  # Положите файл картинки в папку с Terraform
-
-  # Настройки доступа
-  acl = "public-read"
+  key    = "yandex.png"
+  source = "yandex.png"
+  acl    = "public-read"
 }

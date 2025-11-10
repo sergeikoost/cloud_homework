@@ -157,3 +157,15 @@ resource "yandex_compute_instance" "private-vm" {
     ssh-keys = "ubuntu:${file(var.ssh_public_key_path)}"
   }
 }
+# Зависимости для правильного порядка создания
+resource "null_resource" "dependencies" {
+  depends_on = [
+    yandex_vpc_network.main,
+    yandex_vpc_subnet.public,
+    yandex_vpc_subnet.private,
+    yandex_iam_service_account.storage-sa,
+    yandex_resourcemanager_folder_iam_member.compute-admin,
+    yandex_resourcemanager_folder_iam_member.vpc-user,
+    yandex_resourcemanager_folder_iam_member.load-balancer-admin
+  ]
+}
