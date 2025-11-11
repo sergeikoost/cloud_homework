@@ -1,6 +1,0 @@
-bucket_name = "kusk111serj-2025-11-10"
-image_url = "https://kusk111serj-2025-11-10.storage.yandexcloud.net/yandex.png"
-nat_instance_ip = "158.160.12.31"
-network_lb_info = "Network Load Balancer создан: web-network-lb"
-private_vm_internal_ip = "192.168.20.16"
-public_vm_ip = "89.169.168.44"

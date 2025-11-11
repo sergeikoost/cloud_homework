@@ -6,6 +6,7 @@ terraform {
     }
   }
 }
+
 # Подключение провайдера Yandex Cloud
 provider "yandex" {
   token     = var.yc_token
@@ -156,4 +157,17 @@ resource "yandex_compute_instance" "private-vm" {
   metadata = {
     ssh-keys = "ubuntu:${file(var.ssh_public_key_path)}"
   }
+}
+
+# Сервисный аккаунт для доступа к Object Storage и сетям
+resource "yandex_iam_service_account" "storage_admin" {
+  name        = "storage-admin"
+  description = "Service account for storage and network access"
+}
+
+# Назначение роли редактора на всю папку (простой вариант)
+resource "yandex_resourcemanager_folder_iam_member" "editor" {
+  folder_id = var.yc_folder_id
+  role      = "editor"
+  member    = "serviceAccount:${yandex_iam_service_account.storage_admin.id}"
 }
