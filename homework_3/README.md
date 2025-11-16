@@ -25,7 +25,8 @@
  #### Делал все вручную в консоли яндекса.
 
 
-### 1) Для начала сделаем 2 html файла и загрузим их в бакет:
+### 1) Для начала сделаем 2 html файла, загрузим их в бакет и в настройках хостинга статического сайта выберем эти 2 файла:
 
 <img width="1003" height="329" alt="homework_3 2" src="https://github.com/user-attachments/assets/74afab49-21a3-4e6f-8c55-4625a111e037" />
 
+<img width="612" height="352" alt="homework_3 3" src="https://github.com/user-attachments/assets/bd1bb246-7669-410f-a433-87a7829c2fc1" />
