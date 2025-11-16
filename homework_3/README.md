@@ -23,3 +23,9 @@
  **Ответ**
 
  #### Делал все вручную в консоли яндекса.
+
+
+### 1) Для начала сделаем 2 html файла и загрузим их в бакет:
+
+<img width="1003" height="329" alt="homework_3 2" src="https://github.com/user-attachments/assets/74afab49-21a3-4e6f-8c55-4625a111e037" />
+![Uploading image.png…]()
