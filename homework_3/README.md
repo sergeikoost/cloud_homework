@@ -13,6 +13,8 @@
  <img width="1002" height="631" alt="homework_3 1" src="https://github.com/user-attachments/assets/5fe8fb39-db70-4a63-a826-8bb079341aac" />
 
 
+
+
 2. (Выполняется не в Terraform)* Создать статический сайт в Object Storage c собственным публичным адресом и сделать доступным по HTTPS:
 
  - создать сертификат;
