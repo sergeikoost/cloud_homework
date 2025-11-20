@@ -1,4 +1,3 @@
-# Группа безопасности для LAMP инстансов
 resource "yandex_vpc_security_group" "lamp-sg" {
   name        = "lamp-security-group"
   network_id  = yandex_vpc_network.main.id
@@ -31,7 +30,6 @@ resource "yandex_vpc_security_group" "lamp-sg" {
   }
 }
 
-# Группа виртуальных машин
 resource "yandex_compute_instance_group" "lamp_group" {
   name               = "lamp-instance-group"
   folder_id          = var.yc_folder_id
@@ -39,6 +37,7 @@ resource "yandex_compute_instance_group" "lamp_group" {
 
   instance_template {
     platform_id = "standard-v3"
+    
     resources {
       memory = 2
       cores  = 2
@@ -47,14 +46,14 @@ resource "yandex_compute_instance_group" "lamp_group" {
     boot_disk {
       mode = "READ_WRITE"
       initialize_params {
-        image_id = "fd827b91d99psvq5fjit" # LAMP image
+        image_id = "fd827b91d99psvq5fjit"
         size     = 10
       }
     }
 
     network_interface {
       subnet_ids = [yandex_vpc_subnet.public.id]
-      nat       = true
+      nat        = true
       security_group_ids = [yandex_vpc_security_group.lamp-sg.id]
     }
 
@@ -65,7 +64,6 @@ resource "yandex_compute_instance_group" "lamp_group" {
         apt-get update
         apt-get install -y apache2 php libapache2-mod-php mysql-client
         
-        # Создаем веб-страницу с ссылкой на картинку
         cat > /var/www/html/index.html << 'EOL'
         <!DOCTYPE html>
         <html>
@@ -120,7 +118,6 @@ resource "yandex_compute_instance_group" "lamp_group" {
   }
 }
 
-# Сетевой балансировщик
 resource "yandex_lb_network_load_balancer" "lamp_balancer" {
   name = "lamp-network-balancer"
 

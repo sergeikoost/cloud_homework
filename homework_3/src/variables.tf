@@ -39,9 +39,3 @@ variable "image_file_path" {
   type        = string
   default     = "./yandex.png"
 }
-
-variable "kms_key_name" {
-  description = "Name for KMS key"
-  type        = string
-  default     = "netology-bucket-key"
-}
