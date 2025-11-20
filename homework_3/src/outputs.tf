@@ -26,6 +26,15 @@ output "load_balancer_ip" {
   value = yandex_lb_network_load_balancer.lamp_balancer.listener.*.external_address_spec[0].*.address[0]
 }
 
+# KMS ключ информация
+output "kms_key_id" {
+  value = yandex_kms_symmetric_key.bucket-key.id
+}
+
+output "kms_key_status" {
+  value = yandex_kms_symmetric_key.bucket-key.status
+}
+
 # Инструкции для подключения и проверки
 output "connection_instructions" {
   value = <<EOT
@@ -51,7 +60,11 @@ NAT-инстанс: ${yandex_compute_instance.nat.network_interface.0.nat_ip_add
 
 === OBJECT STORAGE ===
 Bucket URL: https://netology-hm-bucket.storage.yandexcloud.net
-Image URL: https://netology-hm-bucket.storage.yandexcloud.net/image.jpg
+Image URL: https://netology-hm-bucket.storage.yandexcloud.net/yandex.png
+
+=== KMS ENCRYPTION ===
+KMS Key ID: ${yandex_kms_symmetric_key.bucket-key.id}
+Bucket encryption: ENABLED
 
 === LOAD BALANCER ===
 Load Balancer IP: ${yandex_lb_network_load_balancer.lamp_balancer.listener.*.external_address_spec[0].*.address[0]}
@@ -61,40 +74,5 @@ Load Balancer IP: ${yandex_lb_network_load_balancer.lamp_balancer.listener.*.ext
 
 6. Чтобы проверить отказоустойчивость, удалите одну из ВМ:
    yc compute instance delete <instance-id>
-EOT
-}
-
-# KMS ключ
-output "kms_key_id" {
-  value = yandex_kms_symmetric_key.bucket_key.id
-}
-
-output "kms_key_status" {
-  value = yandex_kms_symmetric_key.bucket_key.status
-}
-
-# Инструкции по проверке шифрования
-output "encryption_instructions" {
-  value = <<EOT
-
-=== ШИФРОВАНИЕ KMS ===
-
-KMS ключ создан: ${yandex_kms_symmetric_key.bucket_key.id}
-Статус ключа: ${yandex_kms_symmetric_key.bucket_key.status}
-
-Для проверки шифрования:
-
-1. Посмотреть ключи KMS:
-   yc kms symmetric-key list
-
-2. Проверить настройки бакета:
-   yc storage bucket get netology-hm-bucket
-
-3. Убедиться что в выводе есть server_side_encryption_configuration
-
-4. Проверить что картинка все еще доступна:
-   curl -I https://netology-hm-bucket.storage.yandexcloud.net/yandex.png
-
-Шифрование прозрачное - файлы автоматически расшифровываются при доступе!
 EOT
 }

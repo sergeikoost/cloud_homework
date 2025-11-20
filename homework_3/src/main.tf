@@ -7,7 +7,6 @@ terraform {
   }
 }
 
-# Подключение провайдера Yandex Cloud
 provider "yandex" {
   token     = var.yc_token
   cloud_id  = var.yc_cloud_id
@@ -15,12 +14,10 @@ provider "yandex" {
   zone      = var.yc_zone
 }
 
-# Создание VPC
 resource "yandex_vpc_network" "main" {
   name = "main-vpc"
 }
 
-# Публичная подсеть
 resource "yandex_vpc_subnet" "public" {
   name           = "public"
   zone           = var.yc_zone
@@ -28,7 +25,6 @@ resource "yandex_vpc_subnet" "public" {
   v4_cidr_blocks = ["192.168.10.0/24"]
 }
 
-# Приватная подсеть
 resource "yandex_vpc_subnet" "private" {
   name           = "private"
   zone           = var.yc_zone
@@ -37,18 +33,16 @@ resource "yandex_vpc_subnet" "private" {
   route_table_id = yandex_vpc_route_table.nat-route.id
 }
 
-# Таблица маршрутизации для приватной подсети
 resource "yandex_vpc_route_table" "nat-route" {
   name       = "nat-route"
   network_id = yandex_vpc_network.main.id
 
   static_route {
     destination_prefix = "0.0.0.0/0"
-    next_hop_address   = "192.168.10.254" # NAT-инстанс
+    next_hop_address   = "192.168.10.254"
   }
 }
 
-# Группа безопасности для NAT-инстанса
 resource "yandex_vpc_security_group" "nat-sg" {
   name        = "nat-security-group"
   network_id  = yandex_vpc_network.main.id
@@ -73,7 +67,6 @@ resource "yandex_vpc_security_group" "nat-sg" {
   }
 }
 
-# NAT-инстанс
 resource "yandex_compute_instance" "nat" {
   name        = "nat-instance"
   platform_id = "standard-v3"
@@ -86,7 +79,7 @@ resource "yandex_compute_instance" "nat" {
 
   boot_disk {
     initialize_params {
-      image_id = "fd80mrhj8fl2oe87o4e1" # Указанный image_id
+      image_id = "fd80mrhj8fl2oe87o4e1"
       size     = 10
     }
   }
@@ -94,7 +87,7 @@ resource "yandex_compute_instance" "nat" {
   network_interface {
     subnet_id = yandex_vpc_subnet.public.id
     ip_address = "192.168.10.254"
-    nat        = true # Публичный IP для NAT
+    nat        = true
     security_group_ids = [yandex_vpc_security_group.nat-sg.id]
   }
 
@@ -103,7 +96,6 @@ resource "yandex_compute_instance" "nat" {
   }
 }
 
-# Виртуалка в публичной подсети
 resource "yandex_compute_instance" "public-vm" {
   name        = "public-vm"
   platform_id = "standard-v3"
@@ -116,14 +108,14 @@ resource "yandex_compute_instance" "public-vm" {
 
   boot_disk {
     initialize_params {
-      image_id = "fd8vmcue7aajpmeo39kk" # Ubuntu 22.04
+      image_id = "fd8vmcue7aajpmeo39kk"
       size     = 10
     }
   }
 
   network_interface {
     subnet_id = yandex_vpc_subnet.public.id
-    nat       = true # Публичный IP
+    nat       = true
   }
 
   metadata = {
@@ -131,7 +123,6 @@ resource "yandex_compute_instance" "public-vm" {
   }
 }
 
-# Виртуалка в приватной подсети
 resource "yandex_compute_instance" "private-vm" {
   name        = "private-vm"
   platform_id = "standard-v3"
@@ -144,14 +135,13 @@ resource "yandex_compute_instance" "private-vm" {
 
   boot_disk {
     initialize_params {
-      image_id = "fd8vmcue7aajpmeo39kk" # Ubuntu 22.04
+      image_id = "fd8vmcue7aajpmeo39kk"
       size     = 10
     }
   }
 
   network_interface {
     subnet_id = yandex_vpc_subnet.private.id
-    # Без nat = true, только внутренний IP
   }
 
   metadata = {
@@ -159,20 +149,11 @@ resource "yandex_compute_instance" "private-vm" {
   }
 }
 
-# Сервисный аккаунт для доступа к Object Storage и сетям
 resource "yandex_iam_service_account" "storage_admin" {
   name        = "storage-admin"
   description = "Service account for storage and network access"
 }
 
-# Назначение роли сервисному аккаунту для kms
-resource "yandex_resourcemanager_folder_iam_member" "kms_user" {
-  folder_id = var.yc_folder_id
-  role      = "kms.keys.encrypterDecrypter"
-  member    = "serviceAccount:${yandex_iam_service_account.storage_admin.id}"
-}
-
-# Назначение роли редактора на всю папку (простой вариант)
 resource "yandex_resourcemanager_folder_iam_member" "editor" {
   folder_id = var.yc_folder_id
   role      = "editor"
