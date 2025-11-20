@@ -6,7 +6,7 @@ resource "yandex_kms_symmetric_key" "bucket-key" {
   rotation_period   = "8760h"
 }
 
-# Бакет БЕЗ KMS для публичного доступа
+# Бакет для публичного доступа
 resource "yandex_storage_bucket" "student_bucket" {
   bucket     = var.bucket_name
   acl        = "public-read"
@@ -17,7 +17,7 @@ resource "yandex_storage_bucket" "student_bucket" {
     list = false
   }
 
-  # НЕТ server_side_encryption_configuration - публичный доступ
+
 }
 
 resource "yandex_storage_object" "image" {
