@@ -27,8 +27,7 @@
  #### Делал все вручную в консоли яндекса.
 
 
-### 1) Для начала сделаем 2 html файла, загрузим их в бакет и в настройках хостинга статического сайта выберем эти 2 файла:
+### Долго и упорно пытался все сделать в бакете с KMS, не вышло. Поэтому сделал отдельный бакет для выполнения этого задания. Также не смог дождаться сертификата, пришлось через nic.ru регистрировать домен и там уже брать сертификат. 
 
-<img width="1003" height="329" alt="homework_3 2" src="https://github.com/user-attachments/assets/74afab49-21a3-4e6f-8c55-4625a111e037" />
 
-<img width="612" height="352" alt="homework_3 3" src="https://github.com/user-attachments/assets/bd1bb246-7669-410f-a433-87a7829c2fc1" />
+<img width="1553" height="406" alt="homework_3 4" src="https://github.com/user-attachments/assets/7865e232-4fc7-4d74-a67d-1cf8fe5b6143" />
